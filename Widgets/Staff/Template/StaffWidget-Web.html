@@ -1,0 +1,47 @@
+
+<div class="items">
+
+
+
+  {% for dept in DataSet2 %}
+
+      <h2>{{ dept.Dept  }}</h2>
+      <div class="memberList clearfix">
+      {% assign deptName = dept.Dept %}
+      {% assign deptMembers = DataSet1 | where: 'Dept', deptName | sort: "Online_Order" %}
+
+
+
+      {% for element in deptMembers %}
+
+
+        <div class="mL-member clearfix">
+            
+            <div class="mL-photo-frame">
+                <div class="mL-photo">
+                    {% if element.Image_GUID %}
+                    <img src="{{element.File_URL}}{{element.Image_GUID}}" alt="Staff Photograph of {{element.Nickname}} {{element.Last_Name}}">
+                  {% else %}
+                    <img src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="...">
+                  {% endif %}
+                </div>
+            </div>
+        
+            <h3 class="member-item">{{element.Nickname}} {{element.Last_Name}}</h3><span
+                class="member-item mL-position">{{element.Title}}</span>
+                <span class="member-item mL-social clearfix">
+                  {% if element.Email_Address and element.Email_Address != '' %}
+                  <span
+                    class="mL-email">
+                    <a href="mailto:{{element.Email_Address}}">{{element.Email_Address}}</a>
+                </span>
+                {% endif %}
+            </span><!-- .mL-social -->
+        </div><!-- .mL-member -->
+        
+        {% endfor %}
+    </div>
+   {% endfor %}
+
+
+   </div>
