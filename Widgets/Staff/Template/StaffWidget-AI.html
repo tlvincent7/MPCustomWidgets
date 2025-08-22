@@ -9,7 +9,7 @@
   }
 
   .staff-card {
-    flex: 1 1 calc(100% - 1rem); /* Mobile default: 1 per row */
+    flex: 1 1 calc(100% - 1rem);
     border: 1px solid #ddd;
     border-radius: 6px;
     padding: 1rem;
@@ -20,13 +20,13 @@
 
   @media (min-width: 600px) {
     .staff-card {
-      flex: 1 1 calc(50% - 1rem); /* Tablet: 2 per row */
+      flex: 1 1 calc(50% - 1rem);
     }
   }
 
   @media (min-width: 900px) {
     .staff-card {
-      flex: 1 1 calc(33.333% - 1rem); /* Desktop: 3 per row */
+      flex: 1 1 calc(33.333% - 1rem);
     }
   }
 
@@ -39,61 +39,3 @@
   }
 
   .staff-initial {
-    width: 80px;
-    height: 80px;
-    background-color: #ccc;
-    color: #555;
-    font-size: 36px;
-    font-weight: bold;
-    line-height: 80px;
-    text-align: center;
-    border-radius: 50%;
-    margin: 0 auto 0.5rem auto;
-  }
-
-  .email-button {
-    display: inline-block;
-    margin-top: 0.5rem;
-    padding: 0.4rem 0.9rem;
-    background-color: #007bff;
-    color: white;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 0.9rem;
-  }
-
-  .email-button:hover {
-    background-color: #0056b3;
-  }
-
-  .dept-header {
-    margin-top: 2rem;
-    font-size: 1.5rem;
-    color: #333;
-  }
-</style>
-
-<div id="staffContainer">
-  {% for dept in sortedDepartments %}
-    <h2 class="dept-header">{{ dept.Dept }}</h2>
-    <div class="staff-cards">
-      {% assign sortedStaff = dept.Staff | sort: "Online_Order" %}
-      {% for person in sortedStaff %}
-        <div class="staff-card">
-          {% if person.Image_GUID %}
-            <img src="{{ person.File_URL }}{{ person.Image_GUID }}?$thumbnail=true" alt="{{ person.First_Name }} {{ person.Last_Name }}" class="staff-avatar" />
-          {% else %}
-            <div class="staff-initial">{{ person.First_Name | slice: 0, 1 }}</div>
-          {% endif %}
-
-          <strong>{{ person.First_Name }} {{ person.Last_Name }}</strong><br>
-          <em>{{ person.Title }}</em><br>
-
-          {% if person.Email_Address != "" %}
-            <a href="mailto:{{ person.Email_Address }}" class="email-button">Email</a>
-          {% endif %}
-        </div>
-      {% endfor %}
-    </div>
-  {% endfor %}
-</div>
