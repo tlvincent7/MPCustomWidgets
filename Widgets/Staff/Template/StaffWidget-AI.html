@@ -1,0 +1,88 @@
+
+
+
+
+
+
+
+{% assign selectedDeptId = 'dept_id' | QueryString | Default: 'all' %}
+{% assign staffData = 'EXEC GetStaffDirectoryAsJson @DomainID = 1' | SqlQuery | First | ToObject %}
+
+<!-- Dropdown Filter -->
+<form method="get" style="margin-bottom: 2rem;">
+  <label for="deptFilter"><strong>Filter by Department:</strong></label>
+  <select name="dept_id" id="deptFilter" onchange="this.form.submit()" style="margin-left: 1rem; padding: 0.5rem;">
+    <option value="all" {% if selectedDeptId == 'all' %}selected{% endif %}>All Departments</option>
+    {% assign departments = staffData.Departments | sort: 'Dept_Sort' %}
+    {% for dept in departments %}
+      <option value="{{ dept.Dept_ID }}" {% if selectedDeptId == dept.Dept_ID | stringify %}selected{% endif %}>
+        {{ dept.Dept }}
+      </option>
+    {% endfor %}
+  </select>
+</form>
+
+<!-- Staff Cards Grouped by Department -->
+{% assign staffList = staffData.Staff %}
+
+{%- if selectedDeptId != 'all' -%}
+  {% assign staffList = staffList | where: "Dept_ID", selectedDeptId | default: staffList %}
+{%- endif -%}
+
+{% assign grouped = staffList | group_by: "Dept" %}
+{% assign sortedGroups = grouped | sort: "items[0].Dept_Sort" %}
+
+<style>
+  .staff-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .staff-card {
+    flex: 1 1 calc(33.333% - 1rem);
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    max-width: calc(33.333% - 1rem);
+  }
+
+  .staff-card img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .staff-card {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+  }
+</style>
+
+{% for group in sortedGroups %}
+  <h2>{{ group.name }}</h2>
+  <div class="staff-grid">
+    {% assign sortedStaff = group.items | sort: "Online_Order" %}
+    {% for person in sortedStaff %}
+      <div class="staff-card">
+        {% if person.Image_GUID %}
+          <img src="{{ person.File_URL }}{{ person.Image_GUID }}" alt="{{ person.First_Name }} {{ person.Last_Name }}">
+        {% endif %}
+        <strong>{{ person.First_Name }} {{ person.Last_Name }}</strong><br>
+        <em>{{ person.Title }}</em><br><br>
+        {% if person.Email_Address != "" %}
+          Email: <a href="mailto:{{ person.Email_Address }}">{{ person.Email_Address }}</a><br>
+        {% endif %}
+        {% if person.Mobile_Phone %}
+          Phone: {{ person.Mobile_Phone }}<br>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% endfor %}
+
