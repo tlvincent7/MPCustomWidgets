@@ -99,7 +99,7 @@
       {% for person in sortedStaff %}
         <div class="staff-card">
           {% if person.Image_GUID %}
-            <img src="{{ person.File_URL }}{{ person.Image_GUID }}?$thumbnail=true" class="staff-avatar" alt="{{ person.First_Name }} {{ person.Last_Name }}">
+            <img src="{{ person.File_URL }}{{ person.Image_GUID }}" class="staff-avatar" alt="{{ person.First_Name }} {{ person.Last_Name }}">
           {% else %}
             <div class="staff-initial">{{ person.First_Name | slice: 0, 1 }}</div>
           {% endif %}
