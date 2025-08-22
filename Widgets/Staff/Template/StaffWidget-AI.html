@@ -1,75 +1,57 @@
+{% assign staffData = Staff%}}
+{% assign sortedDepartments = staffData | sort: 'Dept_Sort' %}
 
-{% assign selectedDeptId = 'dept_id' | QueryString | Default: 'all' %}
-{% assign staffData = 'EXEC api_custom_StaffWidget_JSON @DomainID = 1' | SqlQuery | First | ToObject %}
-
-<!-- Dropdown Filter -->
-<form method="get" style="margin-bottom: 2rem;">
-  <label for="deptFilter"><strong>Filter by Department:</strong></label>
-  <select name="dept_id" id="deptFilter" onchange="this.form.submit()" style="margin-left: 1rem; padding: 0.5rem;">
-    <option value="all" {% if selectedDeptId == 'all' %}selected{% endif %}>All Departments</option>
-    {% assign sortedDepartments = staffData | sort: 'Dept_Sort' %}
+<table class="mp-table mp-table-bordered mp-align-middle">
+  <tbody>
     {% for dept in sortedDepartments %}
-      <option value="{{ dept.Dept_ID }}" {% if selectedDeptId == dept.Dept_ID | stringify %}selected{% endif %}>
-        {{ dept.Dept }}
-      </option>
-    {% endfor %}
-  </select>
-</form>
+      <!-- Department Header Row -->
+      <tr>
+        <td colspan="2" style="background-color: #f0f0f0;">
+          <h2 class="mp-m-0">{{ dept.Dept }}</h2>
+        </td>
+      </tr>
 
-<!-- Styling for Staff Cards -->
-<style>
-  .staff-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .staff-card {
-    flex: 1 1 calc(33.333% - 1rem);
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    box-sizing: border-box;
-    max-width: calc(33.333% - 1rem);
-  }
-
-  .staff-card img {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 1rem;
-  }
-
-  @media (max-width: 768px) {
-    .staff-card {
-      flex: 1 1 100%;
-      max-width: 100%;
-    }
-  }
-</style>
-
-<!-- Staff Display -->
-{% for dept in sortedDepartments %}
-  {% if selectedDeptId == 'all' or selectedDeptId == dept.Dept_ID | stringify %}
-    <h2>{{ dept.Dept }}</h2>
-    <div class="staff-grid">
       {% assign sortedStaff = dept.Staff | sort: "Online_Order" %}
       {% for person in sortedStaff %}
-        <div class="staff-card">
-          {% if person.Image_GUID %}
-            <img src="{{ person.File_URL }}{{ person.Image_GUID }}" alt="{{ person.First_Name }} {{ person.Last_Name }}">
-          {% endif %}
-          <strong>{{ person.First_Name }} {{ person.Last_Name }}</strong><br>
-          <em>{{ person.Title }}</em><br><br>
-          {% if person.Email_Address != "" %}
-            Email: <a href="mailto:{{ person.Email_Address }}">{{ person.Email_Address }}</a><br>
-          {% endif %}
-          {% if person.Mobile_Phone %}
-            Phone: {{ person.Mobile_Phone }}<br>
-          {% endif %}
-        </div>
+        <tr>
+          <!-- Avatar or Initial -->
+          <td style="width: 80px;">
+            {% if person.Image_GUID %}
+              <img src="{{ person.File_URL }}{{ person.Image_GUID }}?$thumbnail=true" class="mp-avatar mp-avatar-img" alt="{{ person.First_Name }} {{ person.Last_Name }}">
+            {% else %}
+              <div class="mp-avatar mp-avatar-initial">
+                {{ person.First_Name | slice: 0, 1 }}
+              </div>
+            {% endif %}
+          </td>
+
+          <!-- Staff Info -->
+          <td>
+            <strong>{{ person.First_Name }} {{ person.Last_Name }}</strong><br>
+            <em>{{ person.Title }}</em><br>
+
+            {% if person.Email_Address != "" %}
+              <span class="mp-text-muted">Email: <a href="mailto:{{ person.Email_Address }}">{{ person.Email_Address }}</a></span><br>
+            {% endif %}
+
+            {% if person.Mobile_Phone %}
+              <span class="mp-text-muted">Phone: {{ person.Mobile_Phone }}</span><br>
+            {% endif %}
+
+            {% if person.Facebook_URL or person.x_URL %}
+              <div class="mp-mt-1">
+                {% if person.Facebook_URL %}
+                  <a href="{{ person.Facebook_URL }}" target="_blank">Facebook</a>
+                {% endif %}
+                {% if person.x_URL %}
+                  {% if person.Facebook_URL %} | {% endif %}
+                  <a href="{{ person.x_URL }}" target="_blank">X</a>
+                {% endif %}
+              </div>
+            {% endif %}
+          </td>
+        </tr>
       {% endfor %}
-    </div>
-  {% endif %}
-{% endfor %}
+    {% endfor %}
+  </tbody>
+</table>
