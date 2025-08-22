@@ -109,7 +109,7 @@
 
           {% if person.Email_Address or person.Facebook_URL or person.x_URL %}
             <div class="action-buttons">
-              {% if person.Email_Address %}
+              {% if person.Email_Address and person.Email_Address !='' %}
                 <a href="mailto:{{ person.Email_Address }}" class="action-button" title="Email">
                   <i class="fa-solid fa-envelope"></i>
                 </a>
