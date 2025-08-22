@@ -7,29 +7,21 @@
     gap: 1rem;
     margin-bottom: 2rem;
   }
-
   .staff-card {
     flex: 1 1 calc(100% - 1rem);
     border: 1px solid #ddd;
     border-radius: 6px;
-    padding: 1rem;
+    background-color: #fff;
     box-sizing: border-box;
     text-align: center;
-    background-color: #fff;
+    padding: 1rem;
   }
-
   @media (min-width: 600px) {
-    .staff-card {
-      flex: 1 1 calc(50% - 1rem);
-    }
+    .staff-card { flex: 1 1 calc(50% - 1rem); }
   }
-
   @media (min-width: 900px) {
-    .staff-card {
-      flex: 1 1 calc(33.333% - 1rem);
-    }
+    .staff-card { flex: 1 1 calc(33.333% - 1rem); }
   }
-
   .staff-avatar {
     width: 100%;
     height: 180px;
@@ -37,7 +29,6 @@
     border-radius: 6px;
     margin-bottom: 0.75rem;
   }
-
   .staff-initial {
     width: 100%;
     height: 180px;
@@ -50,28 +41,37 @@
     border-radius: 6px;
     margin-bottom: 0.75rem;
   }
-
-  .email-button {
-    display: inline-block;
-    margin-top: 0.5rem;
-    padding: 0.4rem 0.9rem;
-    background-color: #007bff;
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background-color: #333;
     color: white;
-    border-radius: 4px;
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 18px;
   }
-
-  .email-button:hover {
-    background-color: #0056b3;
+  .action-button:hover {
+    background-color: #555;
   }
-
   .dept-header {
     margin-top: 2rem;
     font-size: 1.5rem;
     color: #333;
   }
 </style>
+
+<!-- FontAwesome icons (make sure your platform supports it or include alternative icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <div>
   {% for dept in sortedDepartments %}
@@ -87,23 +87,25 @@
           {% endif %}
 
           <strong>{{ person.First_Name }} {{ person.Last_Name }}</strong><br>
-          <em>{{ person.Title }}</em><br>
+          <em>{{ person.Title }}</em>
 
-          {% if person.Email_Address != "" %}
-            <a href="mailto:{{ person.Email_Address }}" class="email-button">Email</a>
-          {% endif %}
-
-          {% if person.Facebook_URL or person.x_URL %}
-            <div class="mp-mt-1" style="margin-top: 0.5rem;">
-              {% if person.Facebook_URL %}
-                <a href="{{ person.Facebook_URL }}" target="_blank">Facebook</a>
-              {% endif %}
-              {% if person.x_URL %}
-                {% if person.Facebook_URL %} | {% endif %}
-                <a href="{{ person.x_URL }}" target="_blank">X</a>
-              {% endif %}
-            </div>
-          {% endif %}
+          <div class="action-buttons">
+            {% if person.Email_Address %}
+              <a href="mailto:{{ person.Email_Address }}" class="action-button" title="Email">
+                <i class="fa-solid fa-envelope"></i>
+              </a>
+            {% endif %}
+            {% if person.Facebook_URL %}
+              <a href="{{ person.Facebook_URL }}" target="_blank" class="action-button" title="Facebook">
+                <i class="fa-brands fa-facebook-f"></i>
+              </a>
+            {% endif %}
+            {% if person.x_URL %}
+              <a href="{{ person.x_URL }}" target="_blank" class="action-button" title="X">
+                <i class="fa-brands fa-x-twitter"></i>
+              </a>
+            {% endif %}
+          </div>
         </div>
       {% endfor %}
     </div>
