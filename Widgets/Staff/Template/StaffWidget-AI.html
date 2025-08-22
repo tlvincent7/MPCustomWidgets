@@ -1,56 +1,114 @@
-{% assign sortedDepartments = Departments | sort: 'Dept_Sort' %}
+{% assign result = 'EXEC api_custom_StaffWidget_JSON @DomainID=1' | SqlQuery | First | ToObject %}
+{% assign sortedDepartments = result.Departments | sort: 'Dept_Sort' %}
 
-<table class="mp-table mp-table-bordered mp-align-middle">
-  <tbody>
-    {% for dept in sortedDepartments %}
-      <!-- Department Header Row -->
-      <tr>
-        <td colspan="2" style="background-color: #f0f0f0;">
-          <h2 class="mp-m-0">{{ dept.Dept }}</h2>
-        </td>
-      </tr>
+<style>
+  .staff-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .staff-card {
+    flex: 1 1 calc(33.333% - 1rem);
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+  .staff-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+  }
+  .staff-initial {
+    width: 80px;
+    height: 80px;
+    background-color: #ccc;
+    color: #555;
+    font-size: 36px;
+    font-weight: bold;
+    line-height: 80px;
+    text-align: center;
+    border-radius: 50%;
+    margin-bottom: 0.5rem;
+  }
+  .email-button {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.3rem 0.8rem;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  .email-button:hover {
+    background-color: #0056b3;
+  }
+</style>
 
+<label for="deptFilter"><strong>Filter by Department:</strong></label>
+<select id="deptFilter" onchange="filterDepartments()">
+  <option value="all">All Departments</option>
+  {% for dept in sortedDepartments %}
+    <option value="dept-{{ dept.Dept_ID }}">{{ dept.Dept }}</option>
+  {% endfor %}
+</select>
+
+<div id="staffContainer">
+  {% for dept in sortedDepartments %}
+    <h2 class="dept-header" data-dept-id="dept-{{ dept.Dept_ID }}">{{ dept.Dept }}</h2>
+    <div class="staff-cards dept-cards" data-dept-id="dept-{{ dept.Dept_ID }}">
       {% assign sortedStaff = dept.Staff | sort: "Online_Order" %}
       {% for person in sortedStaff %}
-        <tr>
-          <!-- Avatar or Initial -->
-          <td style="width: 80px;">
-            {% if person.Image_GUID %}
-              <img src="{{ person.File_URL }}{{ person.Image_GUID }}?$thumbnail=true" class="mp-avatar mp-avatar-img" alt="{{ person.First_Name }} {{ person.Last_Name }}">
-            {% else %}
-              <div class="mp-avatar mp-avatar-initial">
-                {{ person.First_Name | slice: 0, 1 }}
-              </div>
-            {% endif %}
-          </td>
+        <div class="staff-card">
+          {% if person.Image_GUID %}
+            <img src="{{ person.File_URL }}{{ person.Image_GUID }}?$thumbnail=true" alt="{{ person.First_Name }} {{ person.Last_Name }}" class="staff-avatar" />
+          {% else %}
+            <div class="staff-initial">{{ person.First_Name | slice: 0, 1 }}</div>
+          {% endif %}
+          <strong>{{ person.First_Name }} {{ person.Last_Name }}</strong><br>
+          <em>{{ person.Title }}</em><br>
 
-          <!-- Staff Info -->
-          <td>
-            <strong>{{ person.First_Name }} {{ person.Last_Name }}</strong><br>
-            <em>{{ person.Title }}</em><br>
+          {% if person.Facebook_URL or person.x_URL %}
+            <div class="mp-mt-1">
+              {% if person.Facebook_URL %}
+                <a href="{{ person.Facebook_URL }}" target="_blank">Facebook</a>
+              {% endif %}
+              {% if person.x_URL %}
+                {% if person.Facebook_URL %} | {% endif %}
+                <a href="{{ person.x_URL }}" target="_blank">X</a>
+              {% endif %}
+            </div>
+          {% endif %}
 
-            {% if person.Email_Address != "" %}
-              <span class="mp-text-muted">Email: <a href="mailto:{{ person.Email_Address }}">{{ person.Email_Address }}</a></span><br>
-            {% endif %}
-
-            {% if person.Mobile_Phone %}
-              <span class="mp-text-muted">Phone: {{ person.Mobile_Phone }}</span><br>
-            {% endif %}
-
-            {% if person.Facebook_URL or person.x_URL %}
-              <div class="mp-mt-1">
-                {% if person.Facebook_URL %}
-                  <a href="{{ person.Facebook_URL }}" target="_blank">Facebook</a>
-                {% endif %}
-                {% if person.x_URL %}
-                  {% if person.Facebook_URL %} | {% endif %}
-                  <a href="{{ person.x_URL }}" target="_blank">X</a>
-                {% endif %}
-              </div>
-            {% endif %}
-          </td>
-        </tr>
+          {% if person.Email_Address != "" %}
+            <a href="mailto:{{ person.Email_Address }}" class="email-button">Email</a>
+          {% endif %}
+        </div>
       {% endfor %}
-    {% endfor %}
-  </tbody>
-</table>
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+  function filterDepartments() {
+    var select = document.getElementById('deptFilter');
+    var selected = select.value;
+    var deptHeaders = document.querySelectorAll('.dept-header');
+    var deptCards = document.querySelectorAll('.dept-cards');
+
+    if(selected === 'all') {
+      deptHeaders.forEach(h => h.style.display = '');
+      deptCards.forEach(c => c.style.display = 'flex');
+    } else {
+      deptHeaders.forEach(h => {
+        h.style.display = (h.getAttribute('data-dept-id') === selected) ? '' : 'none';
+      });
+      deptCards.forEach(c => {
+        c.style.display = (c.getAttribute('data-dept-id') === selected) ? 'flex' : 'none';
+      });
+    }
+  }
+</script>
