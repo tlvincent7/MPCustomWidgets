@@ -31,11 +31,81 @@
   }
 
   .staff-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
+    width: 100%;
+    height: 180px;
     object-fit: cover;
-    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
   }
 
   .staff-initial {
+    width: 100%;
+    height: 180px;
+    background-color: #ccc;
+    color: #555;
+    font-size: 48px;
+    font-weight: bold;
+    line-height: 180px;
+    text-align: center;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+  }
+
+  .email-button {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .email-button:hover {
+    background-color: #0056b3;
+  }
+
+  .dept-header {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    color: #333;
+  }
+</style>
+
+<div>
+  {% for dept in sortedDepartments %}
+    <h2 class="dept-header">{{ dept.Dept }}</h2>
+    <div class="staff-cards">
+      {% assign sortedStaff = dept.Staff | sort: "Online_Order" %}
+      {% for person in sortedStaff %}
+        <div class="staff-card">
+          {% if person.Image_GUID %}
+            <img src="{{ person.File_URL }}{{ person.Image_GUID }}?$thumbnail=true" class="staff-avatar" alt="{{ person.First_Name }} {{ person.Last_Name }}">
+          {% else %}
+            <div class="staff-initial">{{ person.First_Name | slice: 0, 1 }}</div>
+          {% endif %}
+
+          <strong>{{ person.First_Name }} {{ person.Last_Name }}</strong><br>
+          <em>{{ person.Title }}</em><br>
+
+          {% if person.Email_Address != "" %}
+            <a href="mailto:{{ person.Email_Address }}" class="email-button">Email</a>
+          {% endif %}
+
+          {% if person.Facebook_URL or person.x_URL %}
+            <div class="mp-mt-1" style="margin-top: 0.5rem;">
+              {% if person.Facebook_URL %}
+                <a href="{{ person.Facebook_URL }}" target="_blank">Facebook</a>
+              {% endif %}
+              {% if person.x_URL %}
+                {% if person.Facebook_URL %} | {% endif %}
+                <a href="{{ person.x_URL }}" target="_blank">X</a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
