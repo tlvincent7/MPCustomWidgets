@@ -1,5 +1,5 @@
-{% assign staffData = Departments | sort: 'Dept_Sort' %}
-{% assign sortedDepartments = staffData | sort: 'Dept_Sort' %}
+{% assign result = 'EXEC api_custom_StaffWidget_JSON @DomainID=1' | SqlQuery | First | ToObject %}
+{% assign sortedDepartments = result.Departments | sort: 'Dept_Sort' %}
 
 <table class="mp-table mp-table-bordered mp-align-middle">
   <tbody>
