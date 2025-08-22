@@ -72,28 +72,12 @@
     font-size: 1.5rem;
     color: #333;
   }
-
-  select#deptFilter {
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    font-size: 1rem;
-  }
 </style>
 
-<!-- Filter Dropdown -->
-<label for="deptFilter"><strong>Filter by Department:</strong></label>
-<select id="deptFilter" onchange="filterDepartments()">
-  <option value="all">All Departments</option>
-  {% for dept in sortedDepartments %}
-    <option value="dept-{{ dept.Dept_ID }}">{{ dept.Dept }}</option>
-  {% endfor %}
-</select>
-
-<!-- Staff Cards by Department -->
 <div id="staffContainer">
   {% for dept in sortedDepartments %}
-    <h2 class="dept-header" data-dept-id="dept-{{ dept.Dept_ID }}">{{ dept.Dept }}</h2>
-    <div class="staff-cards dept-cards" data-dept-id="dept-{{ dept.Dept_ID }}">
+    <h2 class="dept-header">{{ dept.Dept }}</h2>
+    <div class="staff-cards">
       {% assign sortedStaff = dept.Staff | sort: "Online_Order" %}
       {% for person in sortedStaff %}
         <div class="staff-card">
@@ -114,26 +98,3 @@
     </div>
   {% endfor %}
 </div>
-
-<!-- JS Filter Logic -->
-<script>
-  function filterDepartments() {
-    var selected = document.getElementById('deptFilter').value;
-    var deptHeaders = document.querySelectorAll('.dept-header');
-    var deptCards = document.querySelectorAll('.dept-cards');
-
-    if (selected === 'all') {
-      deptHeaders.forEach(header => header.style.display = '');
-      deptCards.forEach(cards => cards.style.display = 'flex');
-    } else {
-      deptHeaders.forEach(header => {
-        header.style.display = header.dataset.deptId === selected ? '' : 'none';
-      });
-      deptCards.forEach(cards => {
-        cards.style.display = cards.dataset.deptId === selected ? 'flex' : 'none';
-      });
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', filterDepartments);
-</script>
