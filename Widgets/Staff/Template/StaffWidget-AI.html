@@ -1,44 +1,52 @@
 {% assign sortedDepartments = Departments | sort: 'Dept_Sort' %}
 
 <style>
-  .staff-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
+  .staff-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-  .staff-card {
-    flex: 1 1 calc(100% - 1rem);
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    background-color: #fff;
-    box-sizing: border-box;
-    text-align: center;
-    padding: 1rem;
-  }
+.dept-heading {
+  font-size: 1.75rem;
+  margin: 2rem 0 1rem;
+}
 
-  @media (min-width: 600px) {
-    .staff-card { flex: 1 1 calc(50% - 1rem); }
-  }
+.staff-grid-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
 
-  @media (min-width: 900px) {
-    .staff-card { flex: 1 1 calc(33.333% - 1rem); }
-  }
+.staff-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
 
- .staff-photo-wrapper {
+.staff-card:hover {
+  transform: translateY(-4px);
+}
+
+.staff-photo-wrapper {
   width: 100%;
-  height: 180px;
-  margin-bottom: 0.75rem;
+  aspect-ratio: 3 / 4; /* Ensures rectangular image area */
+  margin-bottom: 1rem;
 }
 
 .staff-avatar {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: top center;;
+  object-position: top center;
   border-radius: 6px;
-  display: block;
 }
 
 .staff-initial {
@@ -48,41 +56,44 @@
   color: #fff;
   font-weight: bold;
   font-size: 64px;
-  line-height: 180px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 6px;
-  user-select: none;
 }
 
+.staff-info {
+  margin-bottom: 1rem;
+}
 
-  .action-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 0.75rem;
-  }
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: auto;
+}
 
-  .action-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: none;
-    background-color: #333;
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-  }
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: #eee;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  font-size: 18px;
+}
 
-  .action-button:hover {
-    background-color: #555;
-  }
+.action-button:hover {
+  background-color: #ccc;
+}
 
   .action-button.x-twitter {
-    background-color: #f0f0f0;
-    color: #000;
+    background-color: #333;
+    color: #fff;
   }
 
   .action-button.x-twitter:hover {
@@ -99,25 +110,34 @@
 <!-- FontAwesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-<div>
+<div class="staff-grid">
   {% for dept in sortedDepartments %}
-    <h2 class="dept-header">{{ dept.Dept }}</h2>
-    <div class="staff-cards">
+    <h2 class="dept-heading">{{ dept.Dept }}</h2>
+    <div class="staff-grid-row">
       {% assign sortedStaff = dept.Staff | sort: "Online_Order" %}
       {% for person in sortedStaff %}
         <div class="staff-card">
-          {% if person.Image_GUID %}
-            <img src="{{ person.File_URL }}{{ person.Image_GUID }}" class="staff-avatar" alt="{{ person.First_Name }} {{ person.Last_Name }}">
-          {% else %}
-            <div class="staff-initial">{{ person.First_Name | slice: 0, 1 }}</div>
-          {% endif %}
+          <!-- Avatar / fallback -->
+          <div class="staff-photo-wrapper">
+            {% if person.Image_GUID %}
+              <img src="{{ person.File_URL }}{{ person.Image_GUID }}" class="staff-avatar" alt="{{ person.First_Name }} {{ person.Last_Name }}">
+            {% elsif fallback_image_url %}
+              <img src="{{ fallback_image_url }}" class="staff-avatar" alt="Default avatar">
+            {% else %}
+              <div class="staff-initial">{{ person.First_Name | slice: 0, 1 }}</div>
+            {% endif %}
+          </div>
 
-          <strong>{{ person.First_Name }} {{ person.Last_Name }}</strong><br>
-          <em>{{ person.Title }}</em>
+          <!-- Name and title -->
+          <div class="staff-info">
+            <strong>{{ person.First_Name }} {{ person.Last_Name }}</strong><br>
+            <em>{{ person.Title }}</em>
+          </div>
 
-          {% if person.Email_Address or person.Facebook_URL or person.x_URL %}
+          <!-- Contact Buttons -->
+          {% if person.Email_Address != blank or person.Facebook_URL or person.x_URL %}
             <div class="action-buttons">
-              {% if person.Email_Address and person.Email_Address !='' %}
+              {% if person.Email_Address != blank %}
                 <a href="mailto:{{ person.Email_Address }}" class="action-button" title="Email">
                   <i class="fa-solid fa-envelope"></i>
                 </a>
@@ -128,8 +148,8 @@
                 </a>
               {% endif %}
               {% if person.x_URL %}
-                <a href="{{ person.x_URL }}" target="_blank" class="action-button x-twitter" title="X (Twitter)">
-                  <i class="fa-brands fa-x-twitter"></i>
+                <a href="{{ person.x_URL }}" target="_blank" class="action-button" title="X (Twitter)">
+                  <i class="fa-brands fa-x-twitter lighter-icon"></i>
                 </a>
               {% endif %}
             </div>
@@ -139,3 +159,4 @@
     </div>
   {% endfor %}
 </div>
+
