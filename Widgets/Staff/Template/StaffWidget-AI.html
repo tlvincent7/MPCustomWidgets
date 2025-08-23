@@ -16,20 +16,17 @@
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
+  align-items: stretch; /* ensures grid items stretch equally */
 }
 
 .staff-card {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  transition: transform 0.2s ease;
+  height: 100%; /* full height of grid cell */
+  min-height: 420px; 
 }
+
 
 .staff-card:hover {
   transform: translateY(-4px);
@@ -149,7 +146,7 @@
               {% endif %}
               {% if person.x_URL %}
                 <a href="{{ person.x_URL }}" target="_blank" class="action-button" title="X (Twitter)">
-                  <i class="fa-brands fa-x-twitter lighter-icon"></i>
+                  <i class="fa-brands fa-x-twitter"></i>
                 </a>
               {% endif %}
             </div>
