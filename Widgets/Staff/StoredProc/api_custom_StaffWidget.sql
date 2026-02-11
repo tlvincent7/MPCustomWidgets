@@ -37,13 +37,13 @@ BEGIN
 		,S.Facebook_URL
 		,S.x_URL
 		,S.Job_Title AS Title
-		,Image_GUID = COALESCE(SF.Unique_Name, CF.Unique_Name)
+		,Image_GUID = SF.Unique_Name
 		,File_URL = CONCAT('https://', D.External_Server_Name, '/ministryplatformapi/files/')
 	FROM Staff_Members S
 	INNER JOIN Contacts C ON C.Contact_ID = S.Contact_ID
 	INNER JOIN dp_Domains D ON D.Domain_ID = @DomainID
-	LEFT OUTER JOIN dp_Files CF ON CF.Table_Name='Contacts' AND CF.Record_ID=C.Contact_ID AND CF.Default_Image = 1
-	LEFT OUTER JOIN dp_Files SF ON SF.Table_Name='Staff_Members' AND SF.Record_ID=S.Staff_Member_ID AND SF.Default_Image = 1
+	--LEFT OUTER JOIN dp_Files CF ON CF.Table_Name='Contacts' AND CF.Record_ID=C.Contact_ID AND CF.Default_Image = 1
+	INNER JOIN dp_Files SF ON SF.Table_Name='Staff_Members' AND SF.Record_ID=S.Staff_Member_ID AND SF.Default_Image = 1
 	WHERE S.Hire_Date < GETDATE()
 	AND (S.Termination_Date IS NULL OR S.Termination_Date > GETDATE())
 	AND S.Show_Online = 1
