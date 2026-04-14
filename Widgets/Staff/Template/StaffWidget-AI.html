@@ -119,17 +119,17 @@
           <!-- Avatar / fallback -->
           <div class="staff-photo-wrapper">
             {% if person.Image_GUID %}
-              <img src="{{ person.File_URL }}{{ person.Image_GUID }}" class="staff-avatar" alt="{{ person.First_Name }} {{ person.Last_Name }}">
+              <img src="{{ person.File_URL }}{{ person.Image_GUID }}" class="staff-avatar" alt="{{ person.Name_to_Display }}'s photo">
             {% elsif fallback_image_url %}
               <img src="{{ fallback_image_url }}" class="staff-avatar" alt="Default avatar">
             {% else %}
-              <div class="staff-initial">{{ person.First_Name | slice: 0, 1 }}</div>
+              <div class="staff-initial">{{ person.Name_to_Display | slice: 0, 1 }}</div>
             {% endif %}
           </div>
 
           <!-- Name and title -->
           <div class="staff-info">
-            <strong>{{ person.First_Name }} {{ person.Last_Name }}</strong><br>
+            <strong>{{ person.Name_to_Display }}</strong><br>
             <em>{{ person.Title }}</em>
           </div>
 
