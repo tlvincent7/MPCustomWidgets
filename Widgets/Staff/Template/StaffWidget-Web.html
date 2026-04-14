@@ -19,14 +19,14 @@
             <div class="mL-photo-frame">
                 <div class="mL-photo">
                     {% if deptMember.Image_GUID %}
-                    <img src="{{deptMember.File_URL}}{{deptMember.Image_GUID}}" alt="Staff Photograph of {{deptMember.Nickname}} {{deptMember.Last_Name}}">
+                    <img src="{{deptMember.File_URL}}{{deptMember.Image_GUID}}" alt="Staff Photograph of {{deptMember.Name_to_Display}}">
                   {% else %}
                     <img src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="...">
                   {% endif %}
                 </div>
             </div>
         
-            <h3 class="member-item">{{deptMember.Nickname}} {{deptMember.Last_Name}}</h3><span
+            <h3 class="member-item">{{deptMember.Name_to_Display}}</h3><span
                 class="member-item mL-position">{{deptMember.Title}}</span>
                 <span class="member-item mL-social clearfix">
                   {% if deptMember.Email_Address and deptMember.Email_Address != '' %}

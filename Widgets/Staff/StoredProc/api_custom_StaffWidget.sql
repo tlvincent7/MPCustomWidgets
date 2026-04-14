@@ -28,9 +28,7 @@ BEGIN
 
 
 	SELECT 
-		C.Nickname
-		,C.First_Name
-		,C.Last_Name
+		S.Name_to_Display
 		,CASE WHEN S.Show_Email = 1 THEN C.Email_Address ELSE '' END AS Email_Address
 		,C.Mobile_Phone
 		,C.Contact_GUID
@@ -53,35 +51,3 @@ BEGIN
 END
 
 
-
-
-
-
-
-
-
--- ========================================================================================
--- SP MetaData Install
--- ========================================================================================
-DECLARE @spName nvarchar(128) = 'api_custom_StaffWidget'
-DECLARE @spDescription nvarchar(500) = 'Custom Widget SP for returning Staff Widget Data'
-
-IF NOT EXISTS (SELECT API_Procedure_ID FROM dp_API_Procedures WHERE Procedure_Name = @spName)
-BEGIN
-	INSERT INTO dp_API_Procedures
-	(Procedure_Name, Description)
-	VALUES
-	(@spName, @spDescription)	
-END
-
-
-DECLARE @AdminRoleID INT = (SELECT Role_ID FROM dp_Roles WHERE Role_Name='Administrators')
-IF NOT EXISTS (SELECT * FROM dp_Role_API_Procedures RP INNER JOIN dp_API_Procedures AP ON AP.API_Procedure_ID = RP.API_Procedure_ID WHERE AP.Procedure_Name = @spName AND RP.Role_ID=@AdminRoleID)
-BEGIN
-	INSERT INTO dp_Role_API_Procedures
-	(Domain_ID,  API_Procedure_ID, Role_ID)
-	VALUES
-	(1, (SELECT API_Procedure_ID FROM dp_API_Procedures WHERE Procedure_Name = @spName), @AdminRoleID)
-END
-GO
--- ========================================================================================
