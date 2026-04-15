@@ -133,6 +133,103 @@
     font-size: 1.5rem;
     color: #333;
   }
+
+  .bio-button {
+  cursor: pointer;
+  border: none;
+  }
+
+  /* Modal styles */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .mp-modal.mp-show {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.mp-modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 3rem auto;
+  max-width: 600px;
+}
+
+.mp-modal-content {
+  position: relative;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.mp-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.mp-modal-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.mp-modal-close {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  opacity: 0.5;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+}
+
+.mp-modal-close:hover {
+  opacity: 0.75;
+}
+
+.mp-modal-body {
+  padding: 1.5rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.mp-modal-body p {
+  margin: 0;
+}
+
 </style>
 
 <!-- FontAwesome icons -->
@@ -163,8 +260,17 @@
           </div>
 
           <!-- Contact Buttons -->
-          {% if person.Email_Address != blank or person.Facebook_URL or person.x_URL %}
+          {% if person.Email_Address != blank or person.Facebook_URL or person.x_URL or person.Bio %}
             <div class="action-buttons">
+              {% if person.Bio != blank %}
+                <button 
+                  class="action-button bio-button" 
+                  data-mp-toggle="modal" 
+                  data-mp-target="#bioModal-{{ person.Staff_ID }}" 
+                  title="View Bio">
+                  <i class="fa-solid fa-user"></i>
+                </button>
+              {% endif %}
               {% if person.Email_Address != blank %}
                 <a href="mailto:{{ person.Email_Address }}" class="action-button" title="Email">
                   <i class="fa-solid fa-envelope"></i>
@@ -186,5 +292,23 @@
       {% endfor %}
     </div>
   {% endfor %}
+  <!-- Bio Modal for each person -->
+      {% if person.Bio != blank %}
+        <div id="bioModal-{{ person.Staff_ID }}" class="mp-modal">
+          <div class="mp-modal-dialog">
+            <div class="mp-modal-content">
+              <div class="mp-modal-header">
+                <h3>{{ person.First_Name }} {{ person.Last_Name }}</h3>
+                <button type="button" class="mp-modal-close" data-mp-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="mp-modal-body">
+                <p>{{ person.Bio }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
 </div>
 

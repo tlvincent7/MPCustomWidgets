@@ -37,6 +37,7 @@ BEGIN
 		,S.Job_Title AS Title
 		,Image_GUID = SF.Unique_Name
 		,File_URL = CONCAT('https://', D.External_Server_Name, '/ministryplatformapi/files/')
+		,S.Bio
 	FROM Staff_Members S
 	INNER JOIN Contacts C ON C.Contact_ID = S.Contact_ID
 	INNER JOIN dp_Domains D ON D.Domain_ID = @DomainID
