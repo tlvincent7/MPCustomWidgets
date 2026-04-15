@@ -30,13 +30,36 @@
 
 .staff-card:hover {
   transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
 }
 
+.staff-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #45a5aa;
+}
+
+.staff-card {
+  animation: fadeInUp 0.5s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .staff-photo-wrapper {
   width: 100%;
   /*aspect-ratio: 3 / 4; *//* Ensures rectangular image area */
   height: 280px; /* Fixed height for consistent card sizes */
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   flex-shrink: 0; /* Prevents shrinking when content is taller than the image area */
 }
 
