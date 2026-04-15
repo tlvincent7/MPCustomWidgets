@@ -144,7 +144,7 @@
   .mp-modal {
   display: none;
   position: fixed;
-  z-index: 1050;
+  z-index: 9999;
   left: 0;
   top: 0;
   width: 100%;
@@ -155,7 +155,6 @@
 
   .mp-modal.mp-show {
   display: block;
-  animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {
@@ -168,6 +167,7 @@
   width: auto;
   margin: 3rem auto;
   max-width: 600px;
+  z-index: 10000;
 }
 
 .mp-modal-content {
