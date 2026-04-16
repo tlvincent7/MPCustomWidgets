@@ -377,8 +377,8 @@
     <div class="staff-grid-row">
       {% assign sortedStaff = dept.Staff | sort: "Online_Order" %}
       {% for person in sortedStaff %}
-        <div class="staff-card">
-          <!-- Avatar / fallback -->
+        <div class="staff-card" 
+            data-pastoral-leadership="{{ person.Show_In_Pastoral_Leadership }}">
           <div class="staff-photo-wrapper">
             {% if person.Image_GUID %}
               <img 
