@@ -63,6 +63,32 @@
   height: 280px; /* Fixed height for consistent card sizes */
   margin-bottom: 0.5rem;
   flex-shrink: 0; /* Prevents shrinking when content is taller than the image area */
+  position: relative;
+}
+
+.bio-overlay {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(69, 165, 170, 0.85);
+  color: white;
+  padding: 0.4rem 1.2rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+  opacity: 0.9;
+  text-transform: uppercase;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.staff-card:hover .bio-overlay {
+  opacity: 1;
+  background: rgba(69, 165, 170, 1);
+  transform: translate(-50%, -50%) scale(1.05);
 }
 
 .staff-avatar {
@@ -376,6 +402,7 @@
                   data-mp-target="#bioModal-{{ person.Staff_ID }}" 
                   title="View Bio">
                   <i class="fa-solid fa-user"></i>
+                  <div class="bio-overlay">Bio</div>
                 </button>
               {% endif %}
               {% if person.Email_Address != blank %}
