@@ -354,6 +354,37 @@
 .no-results.show {
   display: block;
 }
+
+.pastoral-leadership-container {
+  margin-bottom: 2rem;
+}
+
+.pastoral-leadership-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) !important; /* Force 3 columns */
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  align-items: stretch;
+}
+
+/* Responsive: 2 columns on tablets */
+@media (max-width: 900px) {
+  .pastoral-leadership-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Responsive: 1 column on mobile */
+@media (max-width: 600px) {
+  .pastoral-leadership-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.pastoral-leadership-container.hidden {
+  display: none;
+}
+
 </style>
 
 <!-- FontAwesome icons -->
