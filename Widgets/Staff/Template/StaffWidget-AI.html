@@ -409,7 +409,7 @@
       {% assign sortedStaff = dept.Staff | sort: "Online_Order" %}
       {% for person in sortedStaff %}
         <div class="staff-card" 
-            data-pastoral-leadership="{{ person.Show_In_Pastoral_Leadership }}">
+            data-pastoral-leadership="{% if person.Show_In_Pastoral_Leadership %}true{% else %}false{% endif %}">
           <div class="staff-photo-wrapper">
             {% if person.Image_GUID %}
               <img 
