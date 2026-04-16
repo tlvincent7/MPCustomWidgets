@@ -1,7 +1,21 @@
 {% assign sortedDepartments = Departments | sort: 'Dept_Sort' %}
 
 <style>
-  .staff-grid {
+ 
+ <!-- Search and Filter Controls -->
+<div class="staff-controls">
+  <input type="text" id="staffSearch" class="staff-search-input" placeholder="Search by name...">
+  
+  <select id="deptFilter" class="dept-filter-select">
+    <option value="all">All Departments</option>
+    <!-- Departments will be populated dynamically -->
+  </select>
+  
+  <button id="clearFilters" class="clear-filters-btn">Clear Filters</button>
+</div>
+<div class="no-results" id="noResults">No staff members found matching your search.</div>
+
+ .staff-grid {
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -69,6 +83,23 @@
   object-fit: cover;
   object-position: top center;
   border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.staff-avatar.loaded {
+  opacity: 1;
+}
+
+.staff-avatar.loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 .staff-initial {
@@ -230,7 +261,74 @@
 .mp-modal-body p {
   margin: 0;
 }
+.staff-controls {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
 
+.staff-search-input {
+  flex: 1;
+  min-width: 250px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+}
+
+.staff-search-input:focus {
+  outline: none;
+  border-color: #45a5aa;
+}
+
+.dept-filter-select {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  min-width: 200px;
+}
+
+.clear-filters-btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background: #45a5aa;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.clear-filters-btn:hover {
+  background: #357f83;
+}
+
+.staff-card.hidden {
+  display: none;
+}
+
+.dept-heading.hidden {
+  display: none;
+}
+
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.25rem;
+  color: #666;
+  display: none;
+}
+
+.no-results.show {
+  display: block;
+}
 </style>
 
 <!-- FontAwesome icons -->
@@ -246,9 +344,17 @@
           <!-- Avatar / fallback -->
           <div class="staff-photo-wrapper">
             {% if person.Image_GUID %}
-              <img src="{{ person.File_URL }}{{ person.Image_GUID }}" class="staff-avatar" alt="{{ person.Name_to_Display }}'s photo">
+              <img 
+                data-src="{{ person.File_URL }}{{ person.Image_GUID }}" 
+                class="staff-avatar loading" 
+                alt="{{ person.Name_to_Display }}'s photo"
+                loading="lazy">
             {% elsif fallback_image_url %}
-              <img src="{{ fallback_image_url }}" class="staff-avatar" alt="Default avatar">
+              <img 
+                data-src="{{ fallback_image_url }}" 
+                class="staff-avatar loading" 
+                alt="Default avatar"
+                loading="lazy">
             {% else %}
               <div class="staff-initial">{{ person.Name_to_Display | slice: 0, 1 }}</div>
             {% endif %}
