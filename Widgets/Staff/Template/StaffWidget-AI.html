@@ -66,20 +66,40 @@
   position: relative;
 }
 
-.bio-button-with-text {
-  width: auto;
+.bio-button-styled {
   padding: 0.5rem 1rem;
-  border-radius: 20px;
+  border-radius: 19px; /* Matches the circular buttons' curve */
+  background: #45a5aa;
+  color: white;
+  border: none;
+  font-weight: 600;
+  font-size: 0.85rem;
   display: inline-flex;
-  gap: 0.4rem;
   align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  height: 38px; /* Same height as circular buttons */
 }
 
-.bio-text {
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.bio-button-styled:hover {
+  background: #357f83;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.bio-button-styled i {
+  font-size: 16px;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: auto;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .staff-avatar {
@@ -388,12 +408,12 @@
             <div class="action-buttons">
               {% if person.Bio != blank %}
                 <button 
-                  class="action-button bio-button bio-button-with-text" 
+                  class="bio-button-styled" 
                   data-mp-toggle="modal" 
                   data-mp-target="#bioModal-{{ person.Staff_ID }}" 
                   title="View Bio">
                   <i class="fa-solid fa-user"></i>
-                  <span class="bio-text">Bio</span>
+                  <span>Bio</span>
                 </button>
               {% endif %}
               {% if person.Email_Address != blank %}
