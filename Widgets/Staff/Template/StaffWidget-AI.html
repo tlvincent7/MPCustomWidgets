@@ -2,19 +2,7 @@
 
 <style>
  
- <!-- Search and Filter Controls -->
-<div class="staff-controls">
-  <input type="text" id="staffSearch" class="staff-search-input" placeholder="Search by name...">
-  
-  <select id="deptFilter" class="dept-filter-select">
-    <option value="all">All Departments</option>
-    <!-- Departments will be populated dynamically -->
-  </select>
-  
-  <button id="clearFilters" class="clear-filters-btn">Clear Filters</button>
-</div>
-<div class="no-results" id="noResults">No staff members found matching your search.</div>
-
+ 
  .staff-grid {
   max-width: 1200px;
   margin: 0 auto;
@@ -333,6 +321,18 @@
 
 <!-- FontAwesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- Search and Filter Controls -->
+<div class="staff-controls">
+  <input type="text" id="staffSearch" class="staff-search-input" placeholder="Search by name...">
+  
+  <select id="deptFilter" class="dept-filter-select">
+    <option value="all">All Departments</option>
+    <!-- Departments will be populated dynamically -->
+  </select>
+  
+  <button id="clearFilters" class="clear-filters-btn">Clear Filters</button>
+</div>
+<div class="no-results" id="noResults">No staff members found matching your search.</div>
 
 <div class="staff-grid">
   {% for dept in sortedDepartments %}
