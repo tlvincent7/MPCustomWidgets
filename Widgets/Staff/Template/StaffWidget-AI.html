@@ -66,29 +66,20 @@
   position: relative;
 }
 
-.bio-overlay {
-  position: absolute;
-  top: 55%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(69, 165, 170, 0.85);
-  color: white;
-  padding: 0.4rem 1.2rem;
+.bio-button-with-text {
+  width: auto;
+  padding: 0.5rem 1rem;
   border-radius: 20px;
-  font-weight: bold;
-  font-size: 0.85rem;
-  letter-spacing: 0.5px;
-  pointer-events: none;
-  opacity: 0.9;
-  text-transform: uppercase;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
 }
 
-.staff-card:hover .bio-overlay {
-  opacity: 1;
-  background: rgba(69, 165, 170, 1);
-  transform: translate(-50%, -50%) scale(1.05);
+.bio-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .staff-avatar {
@@ -397,12 +388,12 @@
             <div class="action-buttons">
               {% if person.Bio != blank %}
                 <button 
-                  class="action-button bio-button" 
+                  class="action-button bio-button bio-button-with-text" 
                   data-mp-toggle="modal" 
                   data-mp-target="#bioModal-{{ person.Staff_ID }}" 
                   title="View Bio">
                   <i class="fa-solid fa-user"></i>
-                  <div class="bio-overlay">Bio</div>
+                  <span class="bio-text">Bio</span>
                 </button>
               {% endif %}
               {% if person.Email_Address != blank %}
